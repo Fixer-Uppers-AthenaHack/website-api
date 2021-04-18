@@ -1,0 +1,62 @@
+<nav class="bg-gray-800">
+  <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+    <div class="relative flex items-center justify-between h-16">
+      <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+
+      </div>
+      <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+        <div class="flex-shrink-0 flex items-center">
+          <h1 class="text-xl text-white font-medium">FixMe</h1>
+        </div>
+        <div class="hidden sm:block sm:ml-6">
+          <div class="flex space-x-4">
+
+            <a href="/create-listing" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Create
+              Listing</a>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+        <!-- Profile avatar -->
+        <div class="ml-3 relative">
+          {% if session.user %}
+          <div>
+            <button type="button"
+              class="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+              id="user-menu-button" aria-expanded="false" aria-haspopup="true" onclick="toggleProfileMenu()">
+              <span class="sr-only">Open user menu</span>
+              <img class="h-10 w-10 rounded-full" src="{{ session.user.avatar }}"
+                alt="{{ session.user.name }}'s avatar">
+            </button>
+          </div>
+          <!--
+            Dropdown menu, show/hide based on menu state.
+
+            Entering: "transition ease-out duration-100"
+              From: "transform opacity-0 scale-95"
+              To: "transform opacity-100 scale-100"
+            Leaving: "transition ease-in duration-75"
+              From: "transform opacity-100 scale-100"
+              To: "transform opacity-0 scale-95"
+          -->
+          <div
+            class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none transform opacity-0 scale-95 z-50"
+            role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" id="profile-menu">
+            <!-- Active: "bg-gray-100", Not Active: "" -->
+            <span class="block px-4 py-2 text-sm text-gray-400 italic">
+              <p>Hello, {{ session.user.name }}</p>
+            </span>
+            <a href="/login" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+              id="user-menu-item-2">Sign out</a>
+          </div>
+          {% else %}
+          <a href="/login" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Sign in</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</nav>
