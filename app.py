@@ -1,12 +1,14 @@
 from datetime import datetime as dt
 from typing import Literal
 
-import requests
 import bson
+import requests
 from bson.objectid import ObjectId
 from flask import Flask, jsonify, request
 from flask_pymongo import PyMongo as Mongo
+
 import config
+
 # import utils
 
 app = Flask(__name__)
