@@ -1,7 +1,6 @@
 from datetime import datetime as dt
 from typing import Literal
 
-import bson
 import requests
 from bson.objectid import ObjectId
 from flask import Flask, jsonify, request, session, render_template, redirect, url_for
