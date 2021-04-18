@@ -4,7 +4,7 @@ from typing import Literal
 import bson
 import requests
 from bson.objectid import ObjectId
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, session, render_template, redirect
 from flask_pymongo import PyMongo as Mongo
 
 import config
@@ -12,7 +12,39 @@ import config
 # import utils
 
 app = Flask(__name__)
+app.secret_key = config.SECRET_KEY
 mongo = Mongo(app, uri=config.DB_CONNECTION_STRING).db
+
+
+@app.route("/", methods=["GET"])
+def index():
+    return render_template("listings.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login_page():
+    if request.method == "GET":
+        if "user" in session:
+            session.pop("user")
+        return render_template("login.html")
+    elif request.method == "POST":
+        user = utils_get_user(request.form["user_id"])
+        if user:
+            session["user"] = user
+        return redirect("/", 302)
+
+
+@app.route("/listings", methods=["GET"])
+def listings():
+    return render_template("listings.html")
+
+
+@app.route("/create-listing", methods=["GET", "POST"])
+def create_listing():
+    if request.method == "GET":
+        return render_template("create_listing.html")
+    elif request.method == "POST":
+        return redirect("/", 302)
 
 
 @app.route("/api/search", methods=["GET"])
@@ -149,4 +181,4 @@ def utils_get_listings():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(host="0.0.0.0", port=5000)
