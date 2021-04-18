@@ -6,6 +6,6 @@ services:
       - "80:5000"
     restart: always
     image: run
-    env:
+    environment:
       - FLASK_SECRET_KEY="${FLASK_SECRET_KEY}"
       - CONNECTION_STRING="${CONNECTION_STRING}"
