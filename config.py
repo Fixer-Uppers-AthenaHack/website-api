@@ -18,3 +18,4 @@ def get_env(key, required=False, or_else=None):
 
 
 DB_CONNECTION_STRING = get_env("CONNECTION_STRING", required=True)
+SECRET_KEY = get_env("FLASK_SECRET_KEY", required=True)

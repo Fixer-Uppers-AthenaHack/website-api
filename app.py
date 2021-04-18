@@ -4,21 +4,23 @@ from typing import Literal
 import bson
 import requests
 from bson.objectid import ObjectId
-from flask import Flask, jsonify, request, session, render_template, redirect
+from flask import Flask, jsonify, request, session, render_template, redirect, url_for
 from flask_pymongo import PyMongo as Mongo
 
 import config
 
-# import utils
 
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
 mongo = Mongo(app, uri=config.DB_CONNECTION_STRING).db
 
 
+# Main pages
+
+
 @app.route("/", methods=["GET"])
 def index():
-    return render_template("listings.html")
+    return redirect("/listings")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -36,7 +38,23 @@ def login_page():
 
 @app.route("/listings", methods=["GET"])
 def listings():
-    return render_template("listings.html")
+    listing_list = requests.get("http://127.0.0.1:5000/api/listings").json()
+    shorten_to = lambda s, max: s if len(s) < max else f"{s[:max -3]}..."
+    enum_mapping = {
+        "partsWanted": "Parts wanted",
+        "partsAvailable": "Parts available",
+        "skillsWanted": "Skills wanted",
+        "skillsAvailable": "Skills available",
+    }
+    for listing in listing_list:
+        listing.update(
+            {
+                "title": shorten_to(listing["title"], 64),
+                "description": shorten_to(listing["description"], 100),
+                "type": enum_mapping[listing["type"]],
+            }
+        )
+    return render_template("listings.html", listings=listing_list)
 
 
 @app.route("/create-listing", methods=["GET", "POST"])
@@ -45,6 +63,9 @@ def create_listing():
         return render_template("create_listing.html")
     elif request.method == "POST":
         return redirect("/", 302)
+
+
+# API stuff
 
 
 @app.route("/api/search", methods=["GET"])
@@ -108,6 +129,7 @@ def api_get_listing(listing_id: str):
 def api_all_listings():
     """Fetch all listings"""
     listings = utils_get_listings()
+    print("listings", listings)
     return jsonify(list(listings)), 200
 
 
